@@ -26,10 +26,10 @@ def main():
     # agruments
     try:
         file_name = sys.argv[1]
-        gram_size = sys.argv[2]
-        number    = int(sys.argv[3])
+        number    = int(sys.argv[2])
+        gram_size = sys.argv[3]
     except IndexError:
-        print 'usage: file_name gram_size'
+        print 'usage: keyboard_device top_n range'
         sys.exit(1)
 
     # given a range or single value?
@@ -58,15 +58,16 @@ def main():
 
     # output
     for gram in sorted_grams[-number:][::-1]:
-        if total == 0:
-            print "%-40s%-15d" % (
-                    gram[0].replace('\t', ' '),
-                    gram[1][0])
+
+        key_sequence = gram[0].replace('\t', ' ')
+        sequence_count = gram[1][0]
+
+        if total:
+            ratio = (gram[1][0] / total) * 100
+            print "%-40s%-15d%6.2f" % (key_sequence, sequence_count, ratio)
+
         else:
-            print "%-40s%-15d%6.2f" % (
-                    gram[0].replace('\t', ' '),
-                    gram[1][0],
-                    (gram[1][0] / total) * 100)
+            print "%-40s%-15d" % (key_sequence, sequence_count)
 
     print
     print 'total keys: ', int(total)

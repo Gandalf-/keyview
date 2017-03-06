@@ -23,7 +23,7 @@ Future features will hopefully include:
   ...
   <some typing>
   ...
-  python keyanalyzer.py ~/.keyview.log 1-5 40
+  python keyanalyzer.py ~/.keyview.log 40 1-5
 ```
 
 ## keyview usage
@@ -40,7 +40,7 @@ where
 
 ## keyanalyzer usage
 ```
-  python keyanalyzer.py [keyview_log_file] [n|n-m] [top_k]
+  python keyanalyzer.py [keyview_log_file] [top_k] [n|n-m]
 ```
 
 where 
