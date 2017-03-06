@@ -10,7 +10,7 @@ def get_grams(grams, lines, start, end):
     for i in xrange(len(lines)):
         for n in xrange(start, end):
             try:
-                gram = '+'.join(lines[i:i+n])
+                gram = '\t'.join(lines[i:i+n])
 
                 try:
                     grams[gram][0] += 1
@@ -60,11 +60,11 @@ def main():
     for gram in sorted_grams[-number:][::-1]:
         if total == 0:
             print "%-40s%-15d" % (
-                    gram[0].replace('+', ''),
+                    gram[0].replace('\t', ' '),
                     gram[1][0])
         else:
             print "%-40s%-15d%6.2f" % (
-                    gram[0].replace('+', ''),
+                    gram[0].replace('\t', ' '),
                     gram[1][0],
                     (gram[1][0] / total) * 100)
 
