@@ -10,48 +10,47 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#include <array>
 #include <string>
 #include <iostream>
 
-using namespace std;
-
-enum STATE {S_ON, S_OFF, S_HOLD, S_NONE};
+enum class KeyState { On, Off, Hold, None };
 
 // mode keys
-const string rct = "r_ctl";
-const string lct = "l_ctl";
-const string rsh = "r_shf";
-const string lsh = "l_shf";
-const string ral = "r_alt";
-const string lal = "l_alt";
+const std::string rct = "r_ctl";
+const std::string lct = "l_ctl";
+const std::string rsh = "r_shf";
+const std::string lsh = "l_shf";
+const std::string ral = "r_alt";
+const std::string lal = "l_alt";
 
 // special keys
-const string _U_ = "???";
-const string esc = "srh";
-const string bks = "bks";
-const string ent = "ret";
-const string tab = "tab";
-const string spc = "spc";
-const string slh = "\\";
-const string qot = "\"";
-const string srh = "esc";
-const string fn1 = "b_arw";
-const string fn2 = "f_arw";
-const string fn3 = "refresh";
-const string fn4 = "fullscreen";
-const string fn5 = "switcher";
-const string fn6 = "b_down";
-const string fn7 = "b_up";
-const string fn8 = "mute";
-const string fn9 = "s_down";
-const string fn0 = "s_up";
-const string pwr = "power";
-const string lar = "l_arw";
-const string uar = "u_arw";
-const string dar = "d_arw";
-const string rar = "r_arw";
+const std::string _U_ = "???";
+const std::string esc = "srh";
+const std::string bks = "bks";
+const std::string ent = "ret";
+const std::string tab = "tab";
+const std::string spc = "spc";
+const std::string slh = "\\";
+const std::string qot = "\"";
+const std::string srh = "esc";
+const std::string fn1 = "b_arw";
+const std::string fn2 = "f_arw";
+const std::string fn3 = "refresh";
+const std::string fn4 = "fullscreen";
+const std::string fn5 = "switcher";
+const std::string fn6 = "b_down";
+const std::string fn7 = "b_up";
+const std::string fn8 = "mute";
+const std::string fn9 = "s_down";
+const std::string fn0 = "s_up";
+const std::string pwr = "power";
+const std::string lar = "l_arw";
+const std::string uar = "u_arw";
+const std::string dar = "d_arw";
+const std::string rar = "r_arw";
 
-const string keys[] = {
+const std::array<std::string, 130> keys = {
  /*  0 - 9  */ _U_,esc,"1","2","3","4","5","6","7","8",
  /* 10 - 19 */ "9","0","-","=",bks,tab,"q","w","e","r",
  /* 20 - 29 */ "t","y","u","i","o","p","[","]",ent,rct,
@@ -67,7 +66,7 @@ const string keys[] = {
  /*120 -129 */ _U_,_U_,_U_,_U_,_U_,srh,_U_,_U_,_U_,_U_,
   };
 
-const string shift_keys[] = {
+const std::array<std::string, 130> shift_keys = {
  /*  0 - 9  */ _U_,esc,"!","@","#","$","%","^","&","*",
  /* 10 - 19 */ "(",")","_","+",bks,tab,"Q","W","E","R",
  /* 20 - 29 */ "T","Y","U","I","O","P","{","}",ent,rct,
