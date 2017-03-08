@@ -5,39 +5,42 @@
 
 #include "keyview.h"
 
-using namespace std;
-
 int main(int argc, char **argv)
 {
   int    num_keys, fd;
   struct input_event ev;
   bool   is_modifier_key, shift_state, alt_state, ctrl_state;
-  string key, shift_key;
   STATE  state;
+  std::string key, shift_key;
 
   shift_state = alt_state = ctrl_state = false;
   num_keys = sizeof(keys) / sizeof(*keys);
 
-  if(argc < 2) {
-    printf("usage: %s <device>\n", argv[0]);
+  // arguments
+  if (argc < 2) {
+    std::cerr << "usage: " << argv[0] << " <device>\n";
     return 1;
   }
 
   // open the /dev/input/event device
   fd = open(argv[1], O_RDONLY);
+  if (! fd) {
+    std::cerr << "could not open device\n";
+    return 1;
+  }
 
-  while (1) {
+  while (true) {
 
     // read the new key
     read(fd, &ev, sizeof(struct input_event));
 
-    if(ev.type == 1) {
+    if (ev.type == 1) {
       key = shift_key = "";
       is_modifier_key = false;
       state = S_NONE;
 
       // get key value
-      if (ev.code < num_keys && keys[ev.code] != _U_) {
+      if (ev.code < num_keys and keys[ev.code] != _U_) {
         key = keys[ev.code];
         shift_key = shift_keys[ev.code];
       }
@@ -49,7 +52,7 @@ int main(int argc, char **argv)
         case 2: state = S_HOLD; break;
       }
 
-      if (key != "" and state != S_NONE) {
+      if (not key.empty() and state != S_NONE) {
         // on, hold
         if (state == S_ON or state == S_HOLD) {
           // shift
@@ -80,19 +83,19 @@ int main(int argc, char **argv)
         }
 
         // output
-        if (! is_modifier_key and state == S_ON) {
+        if (not is_modifier_key and state == S_ON) {
 
           if (shift_state) {
             if (shift_key != key)
               key = shift_key;
             else
-              cout << "shf_";
+              std::cout << "shf_";
           }
 
-          if (ctrl_state) cout << "ctl_";
-          if (alt_state)  cout << "alt_";
+          if (ctrl_state) std::cout << "ctl_";
+          if (alt_state)  std::cout << "alt_";
 
-          cout << key << " " << endl;
+          std::cout << key << " \n";
         }
       }
       else {
