@@ -9,13 +9,15 @@
 import sys, operator, time
 
 help_text = \
-    'h         : help'\
-    'r int-int : set substring size range'\
-    's int     : set number of results'\
-    'd         : default query'\
-    'm str ... : query, results must match provided input'\
-    'f str ... : query, results must not match provided input'\
-    't str     : query, results must match provided input exactly'
+    'h         : help\n'\
+    'q         : quit\n'\
+    'c         : clear\n'\
+    'r int-int : set substring size range\n'\
+    's int     : set number of results\n'\
+    'd         : default query\n'\
+    'm str ... : query, results must match provided input\n'\
+    'f str ... : query, results must not match provided input\n'\
+    't str     : query, results must match provided input exactly\n'
 
 def get_substrings(lines, range_start, range_end):
     ''' list of strings, int, int -> dict of strings to lists of ints
@@ -56,6 +58,8 @@ def get_total(substrings):
 
 def shorthand(substring):
     ''' string -> string
+    condenses duplicate instances in the substring
+    ctl_p bks bks bks -> ctl_p bks x3
     '''
     out  = ''
     keys = substring.split('\t')
@@ -114,7 +118,7 @@ def main():
 
     # get file contents
     with open(file_name) as f:
-        lines = [x.rstrip(' \n') for x in f.readlines()]
+        lines = [line.rstrip(' \n') for line in f.readlines()]
 
     # get substrings, total keys
     substrings = get_substrings(lines, 1, 2)
@@ -135,6 +139,14 @@ def main():
             # help
             if query[0] == 'h':
                 print(help_text)
+
+            # quit
+            elif query[0] == 'q':
+                return
+
+            # clear
+            elif query[0] == 'c':
+                print '\n' * 100
 
             # set: query range
             elif query[0] == 'r':

