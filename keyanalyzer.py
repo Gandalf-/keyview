@@ -8,6 +8,9 @@
 
 import sys, operator, time
 
+CNT = 0
+LEN = 1
+
 help_text = \
     'h         : help\n'\
     'q         : quit\n'\
@@ -24,21 +27,23 @@ def get_substrings(lines, range_start, range_end):
 
     fills a dictionary with the frequencies of substrings, where the substrings
     are sizes from @range_start to @range_end. this is completed in one pass
+
+    tab is used as the delimiter between characters in substrings
     '''
     substrings = {}
-    offsets = xrange(range_start, range_end)
+    lengths = xrange(range_start, range_end)
 
     for line_index in xrange(len(lines)):
         base = '\t'.join(lines[line_index:line_index + range_start])
 
-        for offset in offsets:
+        for length in lengths:
             try:
-                substrings[base][0] += 1
+                substrings[base][CNT] += 1
             except KeyError:
-                substrings[base] = [1, offset]
+                substrings[base] = [1, length]
 
             try:
-                base += '\t' + lines[line_index + offset]
+                base += '\t' + lines[line_index + length]
             except IndexError:
                 pass
 
@@ -47,17 +52,21 @@ def get_substrings(lines, range_start, range_end):
 
 def get_total(substrings):
     ''' dict of strings to lists of ints -> float
+
+    sum all substrings (characters) of size 1
     '''
     total = 0.0
 
     for key in substrings:
-        if substrings[key][1] == 1:
-            total += substrings[key][0]
+        if substrings[key][LEN] == 1:
+            total += substrings[key][CNT]
 
     return total
 
+
 def shorthand(substring):
     ''' string -> string
+
     condenses duplicate instances in the substring
     ctl_p bks bks bks -> ctl_p bks x3
     '''
@@ -84,34 +93,30 @@ def print_substrings(sorted_substrings, num_results, total_keys):
     for substring in sorted_substrings[-num_results:][::-1]:
 
         key_sequence   = shorthand(substring[0])
-        sequence_count = substring[1][0]
+        sequence_count = substring[1][CNT]
 
         if total_keys:
-            ratio = (substring[1][0] / total_keys) * 100
+            ratio = (substring[1][CNT] / total_keys) * 100
             print("%-50s%-15d%6.2f" % (key_sequence[:50], sequence_count, ratio))
 
         else:
             print("%-50s%-15d" % (key_sequence[:50], sequence_count))
 
 
-def filter_dict(condition, dictionary):
+def filter_dict(condition, d):
     ''' function, dict -> dict
     '''
-    out = []
-    for key in dictionary:
-        if condition(key):
-            out.append((key, dictionary[key]))
-    return dict(out)
+    return dict([[key, d[key]] for key in d.keys() if condition(key)])
 
 
 def main():
     ''' string -> IO
     '''
-    # agruments
+    # arguments
     try:
         file_name = sys.argv[1]
     except IndexError:
-        print('usage: keyboard_device top_n range')
+        print('usage: keyanalyzer.py logfile')
         return
 
     num_results = 25
@@ -195,12 +200,13 @@ def main():
                 results = sorted(query_dict.items(), key=operator.itemgetter(1))
                 print_substrings(results, num_results, total_keys)
 
+            # show response time
             print(' ' * 72 + '%3.3f ms' % (time.time() * 1000 - query_start))
 
         except (EOFError, KeyboardInterrupt):
             return
 
-        except (ValueError):
+        except (ValueError, IndexError):
             print('\ttype \'h\' for help')
 
 
