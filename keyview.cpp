@@ -7,7 +7,7 @@
 
 int main(int argc, char **argv)
 {
-  int    num_keys, fd;
+  int    num_keys, fd, key_counter = 0;
   struct input_event ev;
   bool   is_modifier_key, shift_state, alt_state, ctrl_state;
   STATE  state;
@@ -34,7 +34,7 @@ int main(int argc, char **argv)
 
   // open output file?
   if (argc == 3) {
-    output_file.open(argv[2], std::ios::out);
+    output_file.open(argv[2], std::ios::out | std::ofstream::app);
   }
 
   std::ostream & output = (argc == 3 ? output_file : std::cout);
@@ -106,7 +106,9 @@ int main(int argc, char **argv)
           if (alt_state)  output << "alt_";
 
           output << key << " \n";
-          output.flush();
+
+          if (key_counter++ % 50 == 0)
+            output.flush();
         }
       }
       else {
