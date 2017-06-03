@@ -12,9 +12,9 @@ int main(int argc, char **argv)
 {
 
   // variables
-  int    num_keys, fd, key_counter = 0;
+  int    num_keys, fd;
   struct input_event ev;
-  bool   is_modifier_key, shift_state, alt_state, ctrl_state, buffer;
+  bool   is_modifier_key, shift_state, alt_state, ctrl_state;
   char  *program_name, *device_name, *output_name;
   STATE  state;
 
@@ -25,7 +25,6 @@ int main(int argc, char **argv)
   shift_state  = false;
   alt_state    = false;
   ctrl_state   = false;
-  buffer       = false;
   program_name = argv[0];
   device_name  = argv[1];
   output_name  = argv[2];
@@ -42,14 +41,14 @@ int main(int argc, char **argv)
   fd = open(device_name, O_RDONLY);
 
   if (fd < 0) {
-    std::cerr << "could not open device '" << device_name << "'" << std::endl;
+    std::cerr << "could not open device '"
+              << device_name << "'" << std::endl;
     return 1;
   }
 
-  // open output file in append mode, buffer output
+  // open output file in append mode
   if (argc == 3) {
     output_file.open(output_name, std::ios::out | std::ofstream::app);
-    buffer = true;
   }
 
   // set output to stdout or log file
@@ -118,10 +117,7 @@ int main(int argc, char **argv)
           if (ctrl_state) output << "ctl_";
           if (alt_state)  output << "alt_";
 
-          output << key << " " << std::endl;
-
-          if (key_counter++ % 50 == 0 or not buffer)
-            output.flush();
+          output << key << std::endl;
         }
       }
       else {
