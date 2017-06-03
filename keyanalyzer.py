@@ -71,8 +71,8 @@ def shorthand(substring):
     condenses duplicate instances in the substring
     ctl_p bks bks bks -> ctl_p bks x3
     '''
-    out  = ''
-    keys = substring.split('\t')
+    out     = ''
+    keys    = substring.split('\t')
     printed = []
 
     for key in keys:
@@ -116,6 +116,7 @@ def main():
     # arguments
     try:
         file_name = sys.argv[1]
+
     except IndexError:
         print('usage: keyanalyzer.py logfile')
         return
@@ -138,12 +139,12 @@ def main():
     while True:
         try:
             print
-            query = raw_input('?> ')
+            query       = raw_input('?> ')
+            run_query   = False
             query_start = time.time() * 1000
-            run_query = False
 
             # help
-            if query[0] == 'h':
+            if   query[0] == 'h':
                 print(help_text)
 
             # quit
@@ -158,9 +159,12 @@ def main():
             elif query[0] == 'r':
                 try:
                     start, end = [int(x) for x in query[2:].split('-')]
+
                 except ValueError:
                     start = end = int(query[2:])
-                end += 1
+
+                finally:
+                    end += 1
 
                 substrings = get_substrings(lines, start, end)
 
@@ -175,25 +179,25 @@ def main():
 
             # query: match all strings
             elif query[0] == 'm':
-                matches = query[2:].split()
+                matches   = query[2:].split()
                 condition = lambda key : all(x in key for x in matches)
                 run_query = True
 
             # query: match any strings
             elif query[0] == 'n':
-                matches = query[2:].split()
+                matches   = query[2:].split()
                 condition = lambda key : key in matches
                 run_query = True
 
             # query: filter strings
             elif query[0] == 'f':
-                filters = query[2:].split()
+                filters   = query[2:].split()
                 condition = lambda key : all(x not in key for x in filters)
                 run_query = True
 
             # query: find string
             elif query[0] == 't':
-                string = query[2:]
+                string    = query[2:]
                 condition = lambda key : ''.join(key.split('\t')) == string
                 run_query = True
 
@@ -204,7 +208,10 @@ def main():
                 else:
                     query_dict = substrings
 
-                results = sorted(query_dict.items(), key=operator.itemgetter(1))
+                results = sorted(
+                    query_dict.items(),
+                    key=operator.itemgetter(1))
+
                 print_substrings(results, num_results, total_keys)
 
             # show response time
