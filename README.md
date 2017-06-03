@@ -19,9 +19,9 @@ Future features will hopefully include:
 ## complete usage
 ```
   make
-  sudo ./keyview /dev/input/event3 > ~/.keyview.log
+  sudo ./keyview /dev/input/event3 ~/.keyview.log
   ...
-  <some typing>
+  <some typing anywhere on the system>
   ...
   python keyanalyzer.py ~/.keyview.log
 ```
@@ -40,7 +40,7 @@ where
 
 ## keyanalyzer usage
 ```
-  python keyanalyzer.py keyview_log_file
+  python keyanalyzer.py ~/.keyview.log
   keyanalyzer.py
           total_keys : 54716
           type 'h' for help
