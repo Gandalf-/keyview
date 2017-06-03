@@ -15,6 +15,7 @@ Future features will hopefully include:
 - Richer analysis of keystrokes
 - Alerts when you're repeating the same sequence of keys too many times, to
   avoid wrist pain
+- Read from multiple keyboard devices simultaneously
 
 ## complete usage
 ```
