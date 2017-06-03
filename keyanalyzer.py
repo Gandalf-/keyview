@@ -19,6 +19,7 @@ help_text = \
     's int     : set number of results\n'\
     'd         : default query\n'\
     'm str ... : query, results must match provided input\n'\
+    'n str ... : query, results must match any of provided input\n'\
     'f str ... : query, results must not match provided input\n'\
     't str     : query, results must match provided input exactly\n'
 
@@ -172,10 +173,16 @@ def main():
                 condition = False
                 run_query = True
 
-            # query: match strings
+            # query: match all strings
             elif query[0] == 'm':
                 matches = query[2:].split()
                 condition = lambda key : all(x in key for x in matches)
+                run_query = True
+
+            # query: match any strings
+            elif query[0] == 'n':
+                matches = query[2:].split()
+                condition = lambda key : key in matches
                 run_query = True
 
             # query: filter strings
