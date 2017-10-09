@@ -8,8 +8,8 @@
 
 #include "keyview.h"
 
-int main(int argc, char **argv)
-{
+int
+main(int argc, char **argv) {
 
   // variables
   int    num_keys, fd;
@@ -34,7 +34,7 @@ int main(int argc, char **argv)
   if (argc < 2) {
     std::cerr << "usage: " << program_name
               << " (device) [log_file]" << std::endl;
-    return 1;
+    return EXIT_FAILURE;
   }
 
   // open the /dev/input/event device
@@ -43,7 +43,7 @@ int main(int argc, char **argv)
   if (fd < 0) {
     std::cerr << "could not open device '"
               << device_name << "'" << std::endl;
-    return 1;
+    return EXIT_FAILURE;
   }
 
   // open output file in append mode
@@ -125,4 +125,6 @@ int main(int argc, char **argv)
       }
     }
   }
+
+  return EXIT_SUCCESS;
 }

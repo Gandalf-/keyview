@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 # keyanalyzer.py
 #   Author: Austin Voecks
@@ -6,7 +6,9 @@
 # example usage:
 #   python keyanalyzer.py ~/.keyview.log 50 1-5
 
-import sys, operator, time
+import operator
+import sys
+import time
 
 CNT = 0
 LEN = 1
@@ -23,6 +25,7 @@ help_text = \
     'f str ... : query, results must not match provided input\n'\
     't str     : query, results must match provided input exactly\n'
 
+
 def get_substrings(lines, range_start, range_end):
     ''' list of strings, int, int -> dict of strings to lists of ints
 
@@ -32,9 +35,9 @@ def get_substrings(lines, range_start, range_end):
     tab is used as the delimiter between characters in substrings
     '''
     substrings = {}
-    lengths = xrange(range_start, range_end)
+    lengths = range(range_start, range_end)
 
-    for line_index in xrange(len(lines)):
+    for line_index in range(len(lines)):
         base = '\t'.join(lines[line_index:line_index + range_start])
 
         for length in lengths:
@@ -71,8 +74,8 @@ def shorthand(substring):
     condenses duplicate instances in the substring
     ctl_p bks bks bks -> ctl_p bks x3
     '''
-    out     = ''
-    keys    = substring.split('\t')
+    out = ''
+    keys = substring.split('\t')
     printed = []
 
     for key in keys:
@@ -93,12 +96,13 @@ def print_substrings(sorted_substrings, num_results, total_keys):
     '''
     for substring in sorted_substrings[-num_results:][::-1]:
 
-        key_sequence   = shorthand(substring[0])
+        key_sequence = shorthand(substring[0])
         sequence_count = substring[1][CNT]
 
         if total_keys:
             ratio = (substring[1][CNT] / total_keys) * 100
-            print("%-50s%-15d%6.2f" % (key_sequence[:50], sequence_count, ratio))
+            print("%-50s%-15d%6.2f" %
+                  (key_sequence[:50], sequence_count, ratio))
 
         else:
             print("%-50s%-15d" % (key_sequence[:50], sequence_count))
@@ -138,13 +142,13 @@ def main():
     # query engine
     while True:
         try:
-            print
-            query       = raw_input('?> ')
-            run_query   = False
+            print()
+            query = input('?> ')
+            run_query = False
             query_start = time.time() * 1000
 
             # help
-            if   query[0] == 'h':
+            if query[0] == 'h':
                 print(help_text)
 
             # quit
@@ -153,7 +157,7 @@ def main():
 
             # clear
             elif query[0] == 'c':
-                print '\n' * 100
+                print('\n' * 100)
 
             # set: query range
             elif query[0] == 'r':
@@ -179,26 +183,30 @@ def main():
 
             # query: match all strings
             elif query[0] == 'm':
-                matches   = query[2:].split()
-                condition = lambda key : all(x in key for x in matches)
+                matches = query[2:].split()
+
+                def condition(key): return all(x in key for x in matches)
                 run_query = True
 
             # query: match any strings
             elif query[0] == 'n':
-                matches   = query[2:].split()
-                condition = lambda key : key in matches
+                matches = query[2:].split()
+
+                def condition(key): return key in matches
                 run_query = True
 
             # query: filter strings
             elif query[0] == 'f':
-                filters   = query[2:].split()
-                condition = lambda key : all(x not in key for x in filters)
+                filters = query[2:].split()
+
+                def condition(key): return all(x not in key for x in filters)
                 run_query = True
 
             # query: find string
             elif query[0] == 't':
-                string    = query[2:]
-                condition = lambda key : ''.join(key.split('\t')) == string
+                string = query[2:]
+
+                def condition(key): return ''.join(key.split('\t')) == string
                 run_query = True
 
             # run the requested query

@@ -13,6 +13,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <cstdlib>
 
 enum STATE {S_ON, S_OFF, S_HOLD, S_NONE};
 
